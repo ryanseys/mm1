@@ -6,36 +6,57 @@ import (
 	"math"
 	"math/rand"
 	"os"
-	"sort"
 	"time"
 )
 
-// Number of iterations
-const ITERATIONS = 10
+// Queue represents a queue in a M/M/1 Queue simulation
+type Queue struct {
+	vec []float64
+}
+
+// Pop pops the last value off the Queue
+// and returns it.
+func (q *Queue) Pop() float64 {
+	i := len(q.vec) - 1
+	elem := q.vec[i]
+	q.vec = q.vec[:i]
+	return elem
+}
+
+// Push appends the value to the queue.
+// No value is returned.
+func (q *Queue) Push(x float64) {
+	q.vec = append(q.vec, x)
+}
+
+// Size returns the number of elements in the Queue.
+func (q *Queue) Size() int {
+	return len(q.vec)
+}
 
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
-	var lambda = 1.0
-	var mu = 1 / 0.6
-	var queue = []float64{}
-	var nextArrival = getExpRandNum(lambda)
-	var nextDeparture = math.Inf(1)
+	lambda := 1.0
+	mu := 1 / 0.6
+	queue := Queue{[]float64{}}
+	nextArrival := getExpRandNum(lambda)
+	nextDeparture := math.Inf(1)
 	// var expectedWait = 1.0 / (mu - lambda)
-	var totalWait = 0.0
-	var customersServiced = 0
+	totalWait := 0.0
+	customersServiced := 0
 	// var waitTimes = []float64{}
-	var numPacketsInSystems = []float64{}
+	numPacketsInSystems := []float64{}
 
 	for {
 		if nextArrival <= nextDeparture {
-			if len(queue) == 0 {
+			if queue.Size() == 0 {
 				nextDeparture = nextArrival + getExpRandNum(mu)
 			}
-			queue = append(queue, nextArrival)
+			queue.Push(nextArrival)
 			nextArrival += getExpRandNum(lambda)
-			numPacketsInSystems = append(numPacketsInSystems, float64(len(queue)))
+			numPacketsInSystems = append(numPacketsInSystems, float64(queue.Size()))
 		} else {
-			wait := nextDeparture - popSlice(&queue)
+			wait := nextDeparture - queue.Pop()
 			totalWait += wait
 			customersServiced++
 
@@ -47,7 +68,7 @@ func main() {
 				histogram.Fprint(os.Stdout, hist, histogram.Linear(10))
 				return
 			}
-			if len(queue) == 0 {
+			if queue.Size() == 0 {
 				nextDeparture = math.Inf(1)
 			} else {
 				nextDeparture += getExpRandNum(mu)
