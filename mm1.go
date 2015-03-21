@@ -6,7 +6,6 @@ import (
 	"math"
 	"math/rand"
 	"os"
-	"sort"
 	"time"
 )
 
