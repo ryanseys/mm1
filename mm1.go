@@ -92,10 +92,3 @@ func getUniformRandBetween(min, max int) float64 {
 func randInt(min, max int) int {
 	return min + rand.Intn(max-min)
 }
-
-func popSlice(a *[]float64) float64 {
-	i := len(*a) - 1
-	e := (*a)[i]
-	*a = append((*a)[:i], (*a)[i+1:]...)
-	return e
-}
