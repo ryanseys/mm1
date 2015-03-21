@@ -8,7 +8,21 @@ M/M/1 Queue in Go
 go get github.com/ryanseys/mm1
 ```
 
+#### Note:
+To use mm1 globally, make sure your GOPATH is properly set up in your environment i.e:
+
+```
+export PATH=$GOPATH:$GOPATH/bin:$PATH
+```
+
+from then on after building the binary, you'll be able to use it like this:
+
+```
+mm1
+```
+
 ## Running
+
 
 ```
 cd $GOPATH/src/github.com/ryanseys/mm1
